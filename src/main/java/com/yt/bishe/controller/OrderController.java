@@ -1,9 +1,8 @@
 package com.yt.bishe.controller;
 
-import com.yt.bishe.entity.Book;
-import com.yt.bishe.entity.Order;
-import com.yt.bishe.entity.User;
+import com.yt.bishe.entity.*;
 import com.yt.bishe.service.BookService;
+import com.yt.bishe.service.ChidTradeCarService;
 import com.yt.bishe.service.OrderService;
 import com.yt.bishe.service.UserService;
 import org.junit.Test;
@@ -30,37 +29,76 @@ public class OrderController {
     private OrderService orderService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ChidTradeCarService ctcService;
 
     @RequestMapping("/createOrder")
     @ResponseBody
     public String createOrder(@RequestParam int bookId, @RequestParam int count, HttpServletRequest request){
         String userName = (String)request.getSession().getAttribute("userName");
-        String shopId = bookService.getShopIdByBookId(bookId);
-        String result = orderService.createOrder(bookId,userName,count,shopId);
+        Book book =bookService.getBookDetails(bookId);
+        ChidOrder chidOrder =new ChidOrder();
+        chidOrder.setBookId(bookId);
+        chidOrder.setCount(count);
+        chidOrder.setPrice(count*book.getPrice());
+        chidOrder.setBookPic(book.getBookAdress());
+        chidOrder.setBookName(book.getBookName());
+
+        String result = orderService.createOrder(userName,count*book.getPrice());
+        chidOrder.setpOrderId(result);
+        orderService.createChidOrder(chidOrder);
         return result;
 
+    }
+    @RequestMapping("/createOrderinCart")
+    @ResponseBody
+    public String createOrderinCart(@RequestParam int[] ids,HttpServletRequest request){
+        double totalPrice =0.00;
+        String userName = (String)request.getSession().getAttribute("userName");
+        for (int i =0 ;i<ids.length;i++){
+            ChidTradeCar ctc=ctcService.getCTradeCarById(ids[i]);
+            totalPrice=totalPrice+ctc.getPrice()*ctc.getCount();
+        }
+        String PorderId =orderService.createOrder(userName,totalPrice);
+        for (int i =0 ;i<ids.length;i++){
+            ChidTradeCar ctc=ctcService.getCTradeCarById(ids[i]);
+            ChidOrder chidOrder=new ChidOrder();
+            chidOrder.setBookName(ctc.getBookName());
+            chidOrder.setBookPic(ctc.getBookPic());
+            chidOrder.setCount(ctc.getCount());
+            chidOrder.setPrice(ctc.getPrice());
+            chidOrder.setpOrderId(PorderId);
+            chidOrder.setBookId(ctc.getBookId());
+            orderService.createChidOrder(chidOrder);
+        }
+        return PorderId;
     }
 
     @RequestMapping("/getOrderInfo")
     @ResponseBody
-    public ModelAndView getOrderInfo(String orderId,ModelAndView modelAndView){
-        Order order = orderService.getOrderInfo(orderId);
-        Book book = bookService.getBookDetails(order.getBookId());
-        User user =userService.getUserInfo(order.getUserName());
+    public ModelAndView getOrderInfo(String orderId,ModelAndView modelAndView,HttpServletRequest request){
+        User user =userService.getUserInfo((String)request.getSession().getAttribute("userName"));
+        Double totalPeice=0.00;
+        List<ChidOrder> chidOrders = orderService.getChidOrderInfo(orderId);
+        Iterator<ChidOrder> iterator =chidOrders.iterator();
+        while (iterator.hasNext()){
+            ChidOrder chidOrder =iterator.next();
+            totalPeice+=chidOrder.getPrice()*chidOrder.getCount();
+        }
+        modelAndView.addObject("chidOrders",chidOrders);
+        modelAndView.addObject("totalPrice",totalPeice);
         modelAndView.addObject("user",user);
-        modelAndView.addObject("book",book);
-        modelAndView.addObject("order",order);
         modelAndView.setViewName("jiesuan");
         return modelAndView;
     }
 
-    @RequestMapping("/reviseOrderAddressAndTotalPrice")
+    @RequestMapping("/reviseOrderAddress")
     @ResponseBody
-    public String reviseOrderAddressAndTotalPrice(@RequestParam String address,@RequestParam String orderId,@RequestParam String totalPrice){
+    public String reviseOrderAddress(@RequestParam String address,@RequestParam String orderId){
         int state = orderService.getOrderInfo(orderId).getPayState();
 
         if (state != 3) {
-            if (orderService.reviseOrderAddressAndTotalPrice(address, orderId, Double.parseDouble(totalPrice))) {
+            if (orderService.reviseOrderAddress(address, orderId)) {
                 return  "1";
             }else return "0";
         }else return "1";
