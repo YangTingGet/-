@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="fragments/adminModel">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>网上购物系统</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        .container {
+            background: cornsilk;
+        }
+        img{
+            width: 100%;
+        }
+        ul{
+            border: 0;
+        }
+        .list-group-item{
+            margin-bottom: 0;
+            border: 0;
+            border-bottom: 1px dashed #ddd;
+            background-color: inherit;
+        }
+        .list2{
+            border-bottom: 0;
+        }
+        .panel-default>.panel-heading {
+            color: #e4393c;
+            background-color: #f7f7f7;
+            border-color: #fff;
+        }
+        .panel-default {
+             border-color: #fff;
+        }
+        .panel-group .panel-heading+.panel-collapse>.panel-body {
+             border-top: 1px solid #fff;
+        }
+        .save {
+            padding: 6px 30px;
+        }
+        .active{
+            background-color: #ff780e;
+        }
+        .mmqd{
+            width: 290px;
+            height: 30px;
+            background-color:rgba(255, 120, 14, 0.58);
+            line-height: 30px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .mmqd em{
+            display: inline-block;
+            width: 33.333%;
+            text-align: center;
+            color: #fff;
+
+        }
+        #reviseSubmit{
+            text-decoration:none;
+        }
+
+    </style>
+</head>
+<body>
+<!--顶部导航-->
+<div id="top-part"></div>
+<!--<div id="search-part"></div>-->
+
+<!--主体内容-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-3" style="background: #f7f7f7" >
+            <ul class="list-group">
+                <li  class="list-group-item" id="/userimg-part"></li>
+                <li class="list-group-item">我的商铺
+                    <ul class="list-group">
+                        <li class="list-group-item list2">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">商铺信息</a>
+                        </li>
+                        <li class="list-group-item list2">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">书架</a>
+                        </li>
+                        <li class="list-group-item list2">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">图书上架</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item">我的钱包</li>
+                <li class="list-group-item">我的理财</li>
+                <li class="list-group-item">地址管理</li>
+                <li class="list-group-item">安全设置</li>
+            </ul>
+        </div>
+        <div class="col-md-8">
+            <div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                商铺信息
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <div class="col-md-offset-1 col-md-7">
+                                <form class="form-horizontal" style="margin-top: 40px" action="/shop/reviseShopInfo" id="reviseForm" method="post">
+                                    <div class="form-group">
+                                        <label for="shopId" class="col-sm-2 control-label">商铺编号</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="shopId" id="shopId" th:value="${shop.shopId}" readonly="true" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="shopName" class="col-sm-2 control-label">商铺名称</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="shopName" id="shopName" th:value="${shop.shopName}">
+                                            <span id="shopNameRequierdSpan" class="reviseRequierdSpan" style="color: red;font-size: 10px"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contact" class="col-sm-2 control-label">商铺电话</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="contact" id="contact" th:value="${shop.contact}">
+                                            <span id="telephoneRequierdSpan" class="reviseRequierdSpan" style="color: red;font-size: 10px"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address" class="col-sm-2 control-label">地址信息</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="address" id="address" th:value="${shop.address}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-3 col-sm-8">
+                                            <a href="javascript:void(0);" id="reviseSubmit"><button type="button" class="btn btn-success save">保存</button></a>
+                                            <!--<button type="submit" class="btn btn-success save" id="reviseSubmit">保存</button> -->
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default" id="bookTable">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                        <h4 class="panel-title">
+                            <a class="collapsed" role="button" id="getBooks" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                书架
+                            </a>
+
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" >
+                        <div class="col-12 col-lg-12">
+                            <table class="table table-hover"  style="overflow-y: scroll;overflow-x: hidden; max-height:400px;">
+                                <thead>
+                                <tr>
+                                    <th scope="col">图书</th>
+                                    <th scope="col">图书名称</th>
+                                    <th scope="col">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody th:each ="book:${books}">
+                                <td>
+                                    <img style="height: 40px;width: 40px" th:src="@{/images/{bookAdress}(bookAdress=${book.bookAdress})}" onerror="this.src='/images/defultBookImg.jpg';this.onerror=null" alt="请上传图片" >
+                                </td>
+                                <td><span th:text ="${book.bookName}">2</span></td>
+                                <td>
+                                    <a th:href="@{/book/getBookDetails(bookId=${book.bookId})}"><button  class="btn btn-primary btn-sm"  >管理图书</button></a>
+                                </td>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingThree">
+                        <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                图书上架
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                        <div class="panel-body">
+                            <div class="col-md-offset-1 col-md-7">
+                                <form class="form-horizontal" style="margin-top: 40px" action="/book/addBook">
+                                    <div class="form-group">
+                                        <label for="bookName" class="col-sm-2 control-label">书本名称</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="bookName" id="bookName" placeholder="bookName">
+                                            <span id="shopNameUpSpan" class="upSpan" style="color: red;font-size: 10px"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="press" class="col-sm-2 control-label">出版社</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="press" id="press" placeholder="出版社">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="publicationDate" class="col-sm-2 control-label">出版时间</label>
+                                        <div class="col-sm-10">
+                                            <input type="date" class="form-control" name="publicationDate" id="publicationDate" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="author" class="col-sm-2 control-label">作者</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="author" id="author" placeholder="作者">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="category" class="col-sm-2 control-label">图书类别</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="category" id="category" placeholder="图书类别">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="price" class="col-sm-2 control-label">价格</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="price" id="price" placeholder="价格">
+                                            <span id="priceUpSpan" class="upSpan" style="color: red;font-size: 10px"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="quality" class="col-sm-2 control-label">书本成色</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="quality" id="quality" placeholder="书本成色">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="count" class="col-sm-2 control-label">库存数量</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="count" id="count" placeholder="库存数量">
+
+                                            <span id="countUpSpan" class="upSpan" style="color: red;font-size: 10px"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-3 col-sm-8">
+                                            <button type="reset" class="btn btn-success save" >重置</button>
+                                            <!--<button type="submit" class="btn btn-success save" id="upBookBtn" href="javascript:addBook()">保存</button>-->
+                                            <a href="javascript:void(0);" ><button type="button" id="upBookBtn" class="btn btn-success save">保存</button></a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</body>
+<script src="/js/jquery-1.11.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $("#top-part").load("/top-part.html");
+    $("#search-part").load("/search-part.html");
+    $("#userimg-part").load("/userimg-part.html");
+
+
+    $("#shopName").blur(function() {
+        var shopName=this.value;
+        shopName=$.trim(shopName);
+        if(shopName==""){
+            $("#shopNameRequierdSpan").text("商铺名称不能为空");
+        }
+    });
+
+    $("#contact").blur(function() {
+        var mobile=this.value;
+        mobile=$.trim(mobile);
+        if(mobile==""){
+            $("#telephoneRequierdSpan").text("电话号码不能为空");
+        }else{
+            var regExp = /^(13[0-9]|15[0|1|3|6|7|8|9]|18[8|9])\d{8}$/;
+            var ok = regExp.test(mobile);
+            if(!ok){
+                $("#telephoneRequierdSpan").text("电话号码格式不正确");
+            }else{
+                $("#telephoneRequierdSpan").text("");
+            }
+        }
+    });
+    $("#reviseSubmit").click(function(){
+        $(".form-control").blur();
+        var flag=true;
+        $.each($(".reviseRequierdSpan"),function(i,n){
+            if(this.innerHTML!=""){
+                flag=false;
+                return false;
+            }
+        });
+        if(!flag){
+            alert("数据非法请检查!");
+        }else{
+            //$("#reviseForm").submit();
+            var shopId = $("#shopId").val();
+            var shopName = $("#shopName").val();
+            var contact = $("#contact").val();
+            var address = $("#address").val();
+            $.ajax({
+                url:"/shop/reviseShopInfo",
+                type:"post",
+                async:false,
+                data:{shopId:shopId,shopName:shopName,contact:contact,address:address},
+                dataType: 'json',
+                success:function(data){
+                    if (data){
+                        window.location.reload();
+                        alert("修改信息成功");
+                    }else {
+                        alert("修改数据失败");
+                    }
+                }
+            })
+        }
+    });
+</script>
+<script>
+    <!-- 图书提交DIV-->
+    $("#bookName").blur(function() {
+        var bookName=this.value;
+        bookName=$.trim(bookName);
+        if(bookName==""){
+            $("#shopNameUpSpan").text("图书名称不能为空");
+        }else{
+            $("#shopNameUpSpan").text("");
+        }
+    });
+    $("#price").blur(function() {
+        var price=this.value;
+        price=$.trim(price);
+        if(price==""){
+            $("#priceUpSpan").text("图书价格不能为空");
+        }else{
+            $("#priceUpSpan").text("");
+        }
+    });
+    $("#count").blur(function() {
+        var count=this.value;
+        count=$.trim(count);
+        if(count==""){
+            $("#countUpSpan").text("图书库存不能为空");
+        }else{
+            $("#countUpSpan").text("");
+        }
+    });
+    $("#upBookBtn").click(function () {
+        $(".form-control").blur();
+        var flag=true;
+        $.each($(".upSpan"),function(i,n){
+            if(this.html()!=""){
+                flag=false;
+                return false;
+            }else return true;
+        });
+        if(!flag){
+            alert("请检查数据填写!");
+        }else {
+            var bookName = $("#bookName").val();
+            var press = $("#press").val();
+            var quality = $("#quality").val();
+            var author = $("#author").val();
+            var category = $("#category").val();
+            var count = $("#count").val();
+            var publicationDate = $("#publicationDate").val();
+            var price = $("#price").val();
+            var upBookInfo = {
+                "bookName":bookName,
+                "press":press,
+                "quality":quality,
+                "author":author,
+                "category":category,
+                "count":count,
+                "publicationDate":publicationDate,
+                "price":price
+            };
+            $.ajax({
+                url: "/book/addBook",
+                type: "post",
+                async:false,
+                data: JSON.stringify(upBookInfo),
+                <!--{bookName:bookName,press:press,quality:quality,author:author,category:category,count:count,copublicationDateunt:copublicationDateunt,price:price},-->
+                dataType: 'json',
+                contentType: "application/json",
+                success: function (data) {
+                    if (data) {
+                        alert("图书添加完成，请到管理图书界面添加图片！");
+                        window.location.reload();
+                    } else alert("添加失败！");
+                }
+            })
+        }
+
+
+    })
+
+
+</script>
+</html>

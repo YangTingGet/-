@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yt.bishe.dao.UserDao">
+
+    <resultMap type="com.yt.bishe.entity.User" id="UserMap">
+        <!-- property对应实体类的属性名称，column为数据库结果集的列的名称 -->
+        <id property="userName" column="user_name" />
+        <result property="relName" column="rel_name"/>
+        <result property="gender" column="gender"/>
+        <result property="address" column="address"/>
+        <result property="birthday" column="birthday"/>
+        <result property="password" column="password"/>
+        <result property="vipState" column="vip_state"/>
+        <result property="telephone" column="telephone"/>
+        <result property="email" column="email"/>
+    </resultMap>
+
+    <insert id="insertUserInfo" parameterType="User">
+        INSERT INTO user(rel_name,gender,user_name,address,birthday,password,telephone,email)
+        VALUES(#{relName},#{gender},#{userName},#{address},#{birthday},#{password},#{telephone},#{email})
+    </insert>
+
+    <select id="selectPassword" resultType="String">
+        select password from user where user_name = #{userName}
+    </select>
+
+    <select id="queryUserInfo" resultMap="UserMap" parameterType="String">
+        select * from user where user_name = #{userName}
+    </select>
+
+    <update id="updateUserInfo" parameterType="User">
+        update user set rel_name=#{relName},gender=#{gender},address=#{address},birthday=#{birthday},telephone=#{telephone},email=#{email} where user_name=#{userName}
+    </update>
+
+    <update id="revisePasswrod" parameterType="String">
+        update user set password=#{password} where user_name=#{userName}
+    </update>
+</mapper>

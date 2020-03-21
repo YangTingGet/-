@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yt.bishe.dao.BookDao">
+
+    <resultMap type="com.yt.bishe.entity.Book" id="BookMap">
+        <!-- property对应实体类的属性名称，column为数据库结果集的列的名称 -->
+        <id property="bookId" column="id" />
+        <result property="bookName" column="book_name"/>
+        <result property="press" column="press"/>
+        <result property="publicationDate" column="publication_date"/>
+        <result property="author" column="author"/>
+        <result property="category" column="category"/>
+        <result property="price" column="price"/>
+        <result property="quality" column="quality"/>
+        <result property="count" column="count"/>
+        <result property="saletime" column="sale_time"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="sales" column="sales"/>
+        <result property="bookAdress" column="picture" />
+    </resultMap>
+
+    <insert id="insertBookInfo" parameterType="Book">
+        INSERT INTO book(id,book_name,press,publication_date,author,category,price,quality,count,shop_id,sale_time)
+        VALUES(#{bookId},#{bookName},#{press},#{publicationDate},#{author},#{category},#{price},#{quality},#{count},#{shopId},now())
+    </insert>
+
+    <select id="selectBooks" resultMap="BookMap">
+        select password from user where user_name = #{userName}
+    </select>
+    
+    <select id="selectBookBySales" resultMap="BookMap">
+        select * from book order by sales desc limit 100 ;
+    </select>
+
+    <!--<sql id="Base_Column_List">-->
+        <!---->
+    <!--</sql>-->
+    <select id="selectBookByPage"  resultMap="BookMap">
+        select *
+        <!--<include refid="Base_Column_List" />-->
+        from book
+    </select>
+
+    <select id="findBooksByShopId" resultMap="BookMap" >
+        select * from book where shop_id = #{ShopId}
+    </select>
+
+    <select id="selectBookByBookId" resultMap="BookMap" >
+        select * from book where id=#{bookId}
+    </select>
+
+    <update id="updateBookInfo" parameterType="Book">
+        update book set book_name=#{bookName},press=#{press},publication_date=#{publicationDate},author=#{author},category=#{category},price=#{price},quality=#{quality},count=#{count} where id=#{bookId}
+    </update>
+
+    <update id="updateBookPic" parameterType="Book">
+        update book set picture=#{1} where id=#{0}
+    </update>
+
+    <delete id="deleteBook" >
+        delete from book where id=#{bookId}
+    </delete>
+
+
+
+    <select id="selectShopIdByBookId" resultType="String">
+        select shop_id from book where id=#{bookId}
+    </select>
+</mapper>

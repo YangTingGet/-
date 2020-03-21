@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yt.bishe.dao.ChidTradeCarDao">
+
+    <resultMap type="com.yt.bishe.entity.ChidTradeCar" id="ChidTradeCarMap">
+        <!-- property对应实体类的属性名称，column为数据库结果集的列的名称 -->
+        <id property="chidTradeCarId" column="id" />
+        <result property="pTradeCarId" column="p_car_id"/>
+        <result property="bookName" column="bookName"/>
+        <result property="bookPic" column="picture"/>
+        <result property="price" column="price"/>
+        <result property="count" column="count"/>
+        <result property="bookId" column="book_id"/>
+
+
+    </resultMap>
+
+    <select id="selectCTradeCarByPId" resultMap="ChidTradeCarMap">
+        select * from chidtradecar where p_car_id=#{pTradeCarId}
+    </select>
+
+    <insert id="insertCTradeCar" parameterType="ChidTradeCar">
+        insert into chidtradecar(p_car_id,bookName,picture,price,count,book_id)
+        values (#{pTradeCarId},#{bookName},#{bookPic},#{price},#{count},#{bookId})
+    </insert>
+
+    <select id="selectChidTradeCarId" resultType="Integer">
+        select id from chidtradecar where book_id=#{0} and p_car_id=#{1}
+    </select>
+
+    <update id="updateChidTradeCar">
+        update chidtradecar set count=#{1} where id=#{0}
+    </update>
+</mapper>

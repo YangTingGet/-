@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yt.bishe.dao.TradeCarDao">
+
+    <resultMap type="com.yt.bishe.entity.TradeCar" id="TradeCarMap">
+        <!-- property对应实体类的属性名称，column为数据库结果集的列的名称 -->
+        <id property="tradeCarId" column="id" />
+        <result property="userName" column="user_name"/>
+
+    </resultMap>
+
+    <insert id="insertTradeCar" parameterType="TradeCar">
+        INSERT INTO tradecar(id,user_name)
+        VALUES(#{tradeCarId},#{userName})
+    </insert>
+
+    <select id="selectTradeCarByUserName" resultMap="TradeCarMap">
+        select * from tradecar where user_name=#{userName}
+    </select>
+</mapper>
